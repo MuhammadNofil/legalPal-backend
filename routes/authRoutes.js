@@ -3,6 +3,7 @@ const AuthControlller = require('../controller/authController')
 const autenticate = require('../middleware/AuthenticateToken')
 
 router.post('/signUp', AuthControlller.signUp)
+router.get('/chat', AuthControlller.chat)
 router.post('/login', AuthControlller.login)
 router.patch('/updateProfile', AuthControlller.updateProfileInformation)
 router.post('/resetPassword', AuthControlller.resetPassword)

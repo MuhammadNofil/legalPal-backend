@@ -2,6 +2,7 @@ const { default: mongoose } = require('mongoose');
 const User = require('../models/userModel')
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const axios = require('axios');
 
 const signUp = async (req, res) => {
     try {
@@ -35,6 +36,7 @@ const signUp = async (req, res) => {
     }
 }
 const login = async (req, res) => {
+    console.log('login')
     const { email, password } = req.body
     try {
         if (!email || !password) {
@@ -268,5 +270,60 @@ const changePassword = async (req, res) => {
         })
     }
 }
-module.exports = { signUp, changePassword,updateProfileInformation, login, resetPassword, verifyotp, updatePassword, resendOtp }
+
+
+// const chat = async (req, res) => {
+//     try {
+//         const response = await axios.get('http://127.0.0.1:8000/api/?q=hi')
+//         console.log(response?.data)
+//         res.status(200).send({
+//             status: 200,
+//             message: "Otp matched",
+//             data: response,
+//         })
+//     } catch (error) {
+//         console.log(error)
+//         res.status(500).send({
+//             message: error.message,
+//             data: null
+//         })
+//     }
+// }
+const chat = async (req, res) => {
+    const { q } = req.query
+    console.log(q)
+    axios.get(`http://127.0.0.1:8000/api/?q=${q}`)
+        .then((response) => {
+            // Extract the data from the Axios response object
+            const responseData = response.data;
+            console.log(response?.data)
+            const responseMessage = responseData.split("[RESPONSE]:")[1].trim();
+
+            // Send the extracted data as the response to the client
+            res.status(200).send(responseMessage);
+        })
+        .catch((error) => {
+            // Handle errors and send an error response to the client
+            console.log(error);
+            res.status(500).send({ message: error.message });
+        });
+
+    // try {
+    //     console.log(response?.data)
+    //     res.status(200).send({
+    //         status: 200,
+    //         message: "Otp matched",
+    //         data: response.data, // Use response.data instead of response
+    //     })
+    // } catch (error) {
+    //     console.log(error)
+    //     res.status(500).send({
+    //         message: error.message,
+    //         data: null
+    //     })
+    // }
+}
+
+
+module.exports = { signUp, chat, changePassword, updateProfileInformation, login, resetPassword, verifyotp, updatePassword, resendOtp }
 
