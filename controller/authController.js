@@ -3,6 +3,8 @@ const User = require('../models/userModel')
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const axios = require('axios');
+const openAPi = require('openai')
+const openai = new openAPi({ apiKey: "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" });
 
 const signUp = async (req, res) => {
     try {
@@ -325,5 +327,29 @@ const chat = async (req, res) => {
 }
 
 
-module.exports = { signUp, chat, changePassword, updateProfileInformation, login, resetPassword, verifyotp, updatePassword, resendOtp }
+const AI = async (req, res) => {
+    const { q } = req.query
+    console.log('hello')
+    const question = q + " " + "Don’t justify your answers. Don’t give information not mentioned in the CONTEXT INFORMATION . and kindly provide information according to pakistani law please be preciesed if the question includes any country name rather then pakistan just write out of my domain"
+    console.log(question)
+    try {
+        const completion = await openai.chat.completions.create({
+
+            messages: [{ role: "assistant", content: question }],
+            model: "gpt-4-0125-preview",
+        });
+
+        res.status(200).send({
+            data: completion.choices[0].message.content
+        })
+        console.log(completion.choices[0].message.content)
+    } catch (error) {
+        console.log(error)
+        res.status(500).send({
+            error: error
+        })
+    }
+}
+
+module.exports = { AI, signUp, chat, changePassword, updateProfileInformation, login, resetPassword, verifyotp, updatePassword, resendOtp }
 

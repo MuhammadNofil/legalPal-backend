@@ -14,6 +14,6 @@ const NotificationSchema = new mongoose.Schema({
         appointment : { type: mongoose.Schema.Types.ObjectId, ref: 'Appointment' },
     }
   },
-});
+}); 
 const Notification = mongoose.model("Notification", NotificationSchema);
 module.exports = Notification;

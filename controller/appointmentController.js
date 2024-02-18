@@ -1,6 +1,7 @@
 const Appointment = require('../models/appointmentModel')
+const Room = require('../models/roomModel')
+const Notification = require('../models/notification')
 const creaetAppointment = async (req, res) => {
-    console.log('hello')
     try {
         console.log('try')
         const { medium, date, time, status, lawyer } = req.body
@@ -11,7 +12,6 @@ const creaetAppointment = async (req, res) => {
             })
         }
         const alreadyExist = await Appointment.findOne({ user: req.user, lawyer })
-        console.log('aleady')
         if (alreadyExist) {
             return res.status(400).send({
                 message: "an appointment alredy exist with this laywer",
@@ -19,6 +19,17 @@ const creaetAppointment = async (req, res) => {
         }
         req.body.user = req.user
         const data = await Appointment.create(req.body)
+        await Room.create({
+            lastMessage : "Tap to chat",
+            activeDate : data?.date,
+            status : "pending",
+            users : [data?.user , data?.lawyer]
+        })
+        await Notification.create({
+            sender : req?.user,
+            reciever : lawyer,
+            text : "booked  job with you"
+        })
         res.status(200).send({
             status: 200,
             message: "Appointment created",
