@@ -4,7 +4,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const axios = require('axios');
 const openAPi = require('openai')
-const openai = new openAPi({ apiKey: "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" });
+const openai = new openAPi({ apiKey: "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" });
 
 const signUp = async (req, res) => {
     try {

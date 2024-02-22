@@ -2,7 +2,6 @@ const express = require('express')
 const mongose = require('mongoose')
 const app = express()
 const socket = require('socket.io')
-const axios = require('axios')
 const Chat = require('./models/chatModel.js')
 
 app.use(express.json())
@@ -22,21 +21,6 @@ app.get('/', (req, res) => {
     res.send('welcome to Legal Pal apis')
 })
 
-// app.get('/chat', async (req, res) => {
-//     const { q } = req.query
-//     try {
-//         const response = await axios.get('http://127.0.0.1:8000/api/?q=hi')
-//         console.log(response?.data)
-//         res.send(200).json({
-//             data : response?.data
-//         })
-//     } catch (error) {
-//         console.log(error)
-//         res.send(500).json({
-//             data : response?.data
-//         })
-//     }
-// })
 
 app.use('/auth', Authroutes)
 app.use('/card', Cardroutes)
