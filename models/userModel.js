@@ -18,11 +18,11 @@ const UserSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    default : null
+    default: null
   },
   about: {
     type: String,
-    default : null
+    default: null
   },
   city: {
     type: String,
@@ -32,22 +32,22 @@ const UserSchema = new mongoose.Schema({
   },
   lawyerType: {
     type: String,
-    default : 'none'
+    default: 'none'
   },
   contactNo: {
     type: String,
   },
   accountDetails: {
     type: Boolean,
-    default : false
+    default: false
   },
   Otp: {
     type: Number,
-    default : null
+    default: null
   },
   socketid: {
     type: [String],
-    default : []
+    default: []
   },
   password: {
     type: String,
@@ -55,6 +55,23 @@ const UserSchema = new mongoose.Schema({
   },
   experience: {
     type: String,
+    // required : true
+  },
+  cus: {
+    type: String,
+    // required : true
+  },
+  isCard: {
+    type: Boolean,
+    // required : true
+  },
+  isPaid: {
+    type: Boolean,
+    default: false
+    // required : true
+  },
+  pId: {
+    type: Boolean,
     // required : true
   },
   createdAt: {

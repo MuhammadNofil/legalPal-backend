@@ -1,16 +1,24 @@
 const Appointment = require('../models/appointmentModel')
 const User = require('../models/userModel')
-
+const Review = require('../models/ReviewModel')
 
 const getLawyers = async (req, res) => {
+    const { filter, search } = req.query
     try {
         const dbQuery = {
             role: 'lawyer',
+            ...(!!filter && filter !== "all" && {
+                lawyerType: filter
+            }),
+            ...(!!search && {
+                userName: { $regex: search, $options: 'i' }
+            })
         }
         const data = await User.find(dbQuery)
+
         res.status(200).json({
             status: 200,
-            data: data
+            data: data,
         })
     } catch (error) {
         res.status(500).send({
@@ -27,9 +35,12 @@ const getLawyerById = async (req, res) => {
             _id: lawyerId
         }
         const data = await User.findOne(dbQuery)
+        const review = await Review.find({ lawyerId: lawyerId })
+        console.log(review)
         res.status(200).json({
             status: 200,
-            data: data
+            data: data,
+            review
         })
     } catch (error) {
         console.log(error)
@@ -95,7 +106,7 @@ const getDashboaerdData = async (req, res) => {
                 pending: pendingCount,
                 cancel: cancelCount,
                 reschedule: RescheduleCount,
-                graph : monthlyCounts
+                graph: monthlyCounts
             }
         })
     } catch (error) {

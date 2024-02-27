@@ -20,15 +20,15 @@ const creaetAppointment = async (req, res) => {
         req.body.user = req.user
         const data = await Appointment.create(req.body)
         await Room.create({
-            lastMessage : "Tap to chat",
-            activeDate : data?.date,
-            status : "pending",
-            users : [data?.user , data?.lawyer]
+            lastMessage: "Tap to chat",
+            activeDate: data?.date,
+            status: "pending",
+            users: [data?.user, data?.lawyer]
         })
         await Notification.create({
-            sender : req?.user,
-            reciever : lawyer,
-            text : "booked  job with you"
+            sender: req?.user,
+            reciever: lawyer,
+            text: "booked  job with you"
         })
         res.status(200).send({
             status: 200,
@@ -88,12 +88,12 @@ const cancelAppointment = async (req, res) => {
     const { _id } = req.body
 
     try {
-        const appointment = await Appointment.findOneAndUpdate(req.body,{
-            status : 'cancel'
+        const appointment = await Appointment.findOneAndUpdate(req.body, {
+            status: 'cancel'
         })
         const data = await Appointment.find({
             user: req?.user,
-            status :  'pending'
+            status: 'pending'
         }).populate('lawyer', 'userName  email city contactNo ').sort({ createdAt: -1 })
         res.status(200).send({
             status: 200,
@@ -127,4 +127,28 @@ const getAssignmentByStatus = async (req, res) => {
     }
 }
 
-module.exports = { creaetAppointment, gettodaysappointment, getAssignmentByStatus, appointmentForUser ,cancelAppointment}
+const completeAppointmment = async (req, res) => {
+    const { _id } = req.body
+    console.log(req.body[0]._id)
+    try {
+        const appointment = await Appointment.findOneAndUpdate({ _id: req.body[0]._id }, {
+            status: 'completed'
+        })
+        const data = await Appointment.find({
+            user: req?.user,
+            status: 'pending'
+        }).populate('lawyer', 'userName  email city contactNo ').sort({ createdAt: -1 })
+        res.status(200).send({
+            status: 200,
+            data: data
+        })
+    } catch (error) {
+        console.log(error)
+        res.status(500).send({
+            message: error.message,
+            data: null
+        })
+    }
+}
+
+module.exports = { completeAppointmment, creaetAppointment, gettodaysappointment, getAssignmentByStatus, appointmentForUser, cancelAppointment }

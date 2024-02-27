@@ -1,9 +1,10 @@
 const User = require('../models/userModel')
+const Review = require('../models/ReviewModel')
 
-const updateMe = async(req,res) =>{
+const updateMe = async (req, res) => {
     try {
-        const data = await User.findOneAndUpdate({_id :req.user},req.body)
-        console.log(data,'dataa')
+        const data = await User.findOneAndUpdate({ _id: req.user }, req.body)
+        console.log(data, 'dataa')
         console.log('dataa')
         res.status(200).send({
             status: 200,
@@ -17,15 +18,16 @@ const updateMe = async(req,res) =>{
         })
     }
 }
-const getUser = async(req,res) =>{
-    console.log(req?.user,'userrrrr')
+const getUser = async (req, res) => {
+    console.log(req?.user, 'userrrrr')
     try {
-        const data = await User.findOne({_id :req.user})
-        console.log(data,'dataa')
+        const data = await User.findOne({ _id: req.user })
+
+        console.log(data, 'dataa')
         console.log('dataa')
         res.status(200).send({
             status: 200,
-            data: data
+            data: data,
         })
     } catch (error) {
         console.log(error)
@@ -36,4 +38,4 @@ const getUser = async(req,res) =>{
     }
 }
 
-module.exports = {getUser,updateMe}
+module.exports = { getUser, updateMe }

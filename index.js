@@ -3,7 +3,7 @@ const mongose = require('mongoose')
 const app = express()
 const socket = require('socket.io')
 const Chat = require('./models/chatModel.js')
-
+require('dotenv').config()
 app.use(express.json())
 
 
@@ -15,6 +15,7 @@ const Appointmentroutes = require('./routes/appointmentRoutes')
 const UserRoutes = require('./routes/userRoute')
 const ChatRoutes = require('./routes/chatRoute')
 const NotificationRoute = require('./routes/notificationRoutes.js')
+const ReviewRouter = require('./routes/reviewRouter.js')
 
 
 app.get('/', (req, res) => {
@@ -29,6 +30,7 @@ app.use('/appointement', Appointmentroutes)
 app.use('/user', UserRoutes)
 app.use('/chats', ChatRoutes)
 app.use('/notification', NotificationRoute)
+app.use('/review', ReviewRouter)
 
 // database connection
 mongose.connect('mongodb+srv://nofilsaleem:UMYqlY0gVDTlX22U@cluster0.r6mmshd.mongodb.net')
@@ -42,13 +44,13 @@ server.listen(3015, () => {
 })
 
 const io = socket(server)
-io.on('connection', function(socket){
+io.on('connection', function (socket) {
     console.log('a user connected');
 
-    socket.on('join',(data)=>{
+    socket.on('join', (data) => {
         socket.join(data?.id)
     })
-    socket.on('msg', async function(msg){
+    socket.on('msg', async function (msg) {
         console.log(msg);
         io.emit('chat message', msg);
         try {
@@ -63,6 +65,6 @@ io.on('connection', function(socket){
             console.error("Error saving chat message:", error);
         }
     });
-    
-  });
+
+});
 // module.exports = io

@@ -6,5 +6,6 @@ router.get('/getAllData', autenticate, AppointmentController.getAssignmentByStat
 router.get('/getUserData', autenticate, AppointmentController.appointmentForUser)
 router.get('/getAllData/:id', autenticate, AppointmentController.gettodaysappointment)
 router.patch('/cancel', autenticate, AppointmentController.cancelAppointment)
+router.patch('/complete', autenticate, AppointmentController.completeAppointmment)
 
 module.exports = router

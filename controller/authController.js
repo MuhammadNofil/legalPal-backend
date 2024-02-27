@@ -4,8 +4,8 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const axios = require('axios');
 const openAPi = require('openai')
-const openai = new openAPi({ apiKey: "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" });
-
+const openai = new openAPi({ apiKey: process.env.CHAT });
+const { createCustomer, addCustomerCard } = require('../utils/stripe')
 const signUp = async (req, res) => {
     try {
         const { email, userName, role, password } = req.body
@@ -23,6 +23,9 @@ const signUp = async (req, res) => {
             })
         }
         const hashedPassword = await bcrypt.hash(password, 10)
+        const cus = await createCustomer(email)
+        req.body.cus = cus
+        console.log(req.body.cus)
         const data = await User.create({ email, userName, role, password: hashedPassword })
         res.status(200).send({
             status: 200,
@@ -351,5 +354,13 @@ const AI = async (req, res) => {
     }
 }
 
-module.exports = { AI, signUp, chat, changePassword, updateProfileInformation, login, resetPassword, verifyotp, updatePassword, resendOtp }
+
+const addCard = async (req, res) => {
+    const { pmId } = req.body
+    const user = await User.findOne({ _id: req.user })
+    await addCustomerCard(pmId, user?.cus)
+    return res.sendStats(200).send({ message: 'card Added' })
+}
+
+module.exports = { AI, signUp, chat, changePassword, updateProfileInformation, login, resetPassword, verifyotp, updatePassword, resendOtp, addCard }
 
